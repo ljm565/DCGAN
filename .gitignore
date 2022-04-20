@@ -7,3 +7,4 @@ MNIST/
 result/
 test/
 .DS_Store
+CelebA/
