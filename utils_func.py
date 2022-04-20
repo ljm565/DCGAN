@@ -21,7 +21,7 @@ def make_img_data(path, trans):
 
 def save_images(fake_output, fake_list):
     fake_output = fake_output.detach().cpu()
-    img = make_grid(fake_output, nrow=8).numpy()
+    img = make_grid(fake_output, nrow=8, padding=2, normalize=True).numpy()
     img = np.transpose(img, (1,2,0))
     fake_list.append(img)
     return fake_list
