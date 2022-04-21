@@ -10,7 +10,7 @@ import math
 import os
 
 from config import Config
-from utils_func import save_checkpoint, make_img_data, save_images, gif_making, generated_img_per_epochs, image_path, draw
+from utils_func import *
 from utils_data import DLoader
 from model_DCGAN import Generator, Discriminator
 from pytorch_fid.fid_score import calculate_fid_given_paths
