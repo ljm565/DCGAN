@@ -1,6 +1,5 @@
 import torch.nn as nn
 from config import Config
-import torch
 import math
 
 
