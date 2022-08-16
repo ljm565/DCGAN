@@ -24,8 +24,8 @@ class Generator(nn.Module):
             [nn.Sequential(
                 nn.ConvTranspose2d(in_channels=self.g_dim, out_channels=self.color_channel, kernel_size=4, stride=2, padding=1, bias=False),
                 nn.Tanh()
-        )]
-    )
+            )]
+        )
 
     def forward(self, x):
         for layer in self.generator:
