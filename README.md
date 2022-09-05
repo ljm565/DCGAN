@@ -105,9 +105,3 @@ Deep Convolutional Generative Adversarial Network (DCGAN)는 생성 모델인 va
 <img src="images/generation_gif_100epochs.gif" width="50%"><br><br>
 <img src="images/RealandFake.png" width="100%"><br><br>
 <br><br><br>
-
-
-## License
-© 2022. Jun-Min Lee. All rights reserved.<br>
-ljm56897@gmail.com, ljm565@kaist.ac.kr, ljm565@naver.com
-
