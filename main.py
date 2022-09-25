@@ -5,6 +5,7 @@ import os
 from train import Trainer
 from config import Config
 import json
+import sys
 
 
 
@@ -21,7 +22,7 @@ def main(config_path:Config, args:ArgumentParser):
             print('*'*36)
             print('There is no [-n, --name] argument')
             print('*'*36)
-            raise AssertionError
+            sys.exit()
     else:
         config = Config(config_path)
         base_path = config.base_path
