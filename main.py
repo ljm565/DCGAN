@@ -60,6 +60,10 @@ def main(config_path:Config, args:ArgumentParser):
         print('test starting...\n')
         fid_score = trainer.test()
         print('FID score: {}'.format(fid_score))
+
+    else:
+        print("Please select mode between 'train', and 'test'")
+        sys.exit()
     
 
 
