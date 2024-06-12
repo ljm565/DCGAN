@@ -70,6 +70,6 @@ DCGAN 모델 학습을 위해서 다음 과정을 따라주시기 바랍니다.
 
 ## Training Results
 * DCGAN 결과<br><br>
-<img src="docs/figs/generation_gif_100epochs.gif" width="50%"><br><br>
-<img src="docs/figs/RealAndFake.png" width="100%"><br><br>
+<img src="figs/generation_gif_100epochs.gif" width="50%"><br><br>
+<img src="figs/RealAndFake.png" width="100%"><br><br>
 <br><br><br>
