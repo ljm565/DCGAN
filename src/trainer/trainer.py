@@ -69,8 +69,8 @@ class Trainer:
         self.fixed_test_noise = torch.randn(128, self.noise_init_size).to(self.device)
         self.criterion = nn.BCELoss()
         if self.is_training_mode:
-            self.g_optimizer = optim.Adam(self.generator.parameters(), lr=self.config.lr)
-            self.d_optimizer = optim.Adam(self.discriminator.parameters(), lr=self.config.lr)
+            self.g_optimizer = optim.Adam(self.generator.parameters(), lr=self.config.lr, betas=(self.config.beta1, 0.999))
+            self.d_optimizer = optim.Adam(self.discriminator.parameters(), lr=self.config.lr, betas=(self.config.beta1, 0.999))
 
 
     def _init_model(self, config, mode):

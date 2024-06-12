@@ -6,7 +6,7 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader, distributed, random_split
 
 from models import Generator, Discriminator
-from utils import RANK
+from utils import RANK, LOGGER, colorstr
 from utils.data_utils import DLoader, seed_worker
 
 PIN_MEMORY = str(os.getenv('PIN_MEMORY', True)).lower() == 'true'  # global pin_memory for dataloaders
@@ -21,21 +21,33 @@ def get_model(config, device):
 
 def build_dataset(config, modes):
     dataset_dict = {}
-    if config.MNIST_train:
-        # set to MNIST size
-        config.width, config.height = 28, 28
+    if config.CelebA_train:
+        # set to CelebA size
+        config.width, config.height = 64, 64
 
         # init train, validation, test sets
-        mnist_path = config.MNIST.path
-        mnist_valset_proportion = config.MNIST.MNIST_valset_proportion
-        trainset = dsets.MNIST(root=mnist_path, transform=transforms.ToTensor(), train=True, download=True)
-        valset_l = int(len(trainset) * mnist_valset_proportion)
-        trainset_l = len(trainset) - valset_l
-        trainset, valset = random_split(trainset, [trainset_l, valset_l])
-        testset = dsets.MNIST(root=mnist_path, transform=transforms.ToTensor(), train=False, download=True)
-        tmp_dsets = {'train': trainset, 'validation': valset, 'test': testset}
-        for mode in modes:
-            dataset_dict[mode] = tmp_dsets[mode]
+        os.makedirs(config.CelebA.path, exist_ok=True)
+
+        if not os.path.isdir(os.path.join(config.CelebA.path, 'CelebA')):
+            try:
+                LOGGER.info(colorstr('Downloading...'))
+                wget_path = os.path.join(config.CelebA.path, 'CelebA.zip')
+                unzip_path = os.path.join(config.CelebA.path, 'CelebA')
+                exec = 'wget -O ' + wget_path + ' https://s3-us-west-1.amazonaws.com/udacity-dlnfd/datasets/celeba.zip && unzip ' + wget_path + ' -d ' + unzip_path + ' && rm ' + wget_path
+                os.system(exec)
+            except Exception as e:
+                LOGGER.info(colorstr('red', 'Downloading failed...'))
+                LOGGER.info(colorstr('red', 'Command not found. Please check mkdir, wget, unzip, rm command'))
+
+            celeba_valset_proportion = config.CelebA.CelebA_valset_proportion
+            trainset = dsets.MNIST(root=celeba_path, transform=transforms.ToTensor(), train=True, download=True)
+            valset_l = int(len(trainset) * celeba_valset_proportion)
+            trainset_l = len(trainset) - valset_l
+            trainset, valset = random_split(trainset, [trainset_l, valset_l])
+            testset = dsets.MNIST(root=celeba_path, transform=transforms.ToTensor(), train=False, download=True)
+            tmp_dsets = {'train': trainset, 'validation': valset, 'test': testset}
+            for mode in modes:
+                dataset_dict[mode] = tmp_dsets[mode]
     else:
         for mode in modes:
             dataset_dict[mode] = DLoader(config.CUSTOM.get(f'{mode}_data_path'))
