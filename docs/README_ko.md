@@ -2,7 +2,7 @@
 
 ## Introduction
 Deep Convolutional Generative Adversarial Network (DCGAN)는 생성 모델인 vanilla GAN의 문제점을 극복하고, CNN이 black-box라는 것에 실험으로써 반박한 알고리즘입니다.
-여기서는 DCGAN의 코드를 확인할 수 있으며, CelebA 데이터의 경우 DCGAN이 학습하면서 생성하는 순차적인 결과의 변화를 gif 형식의 파일로 가시화할 수 있습니다. 또한 학습된 모델이 생성한 데이터의 질을 확인하기 위하여 [Fréchet Inception Distance (FID) score](https://github.com/mseitzer/pytorch-fid)를 계산할 수 있습니다(출처: https://github.com/mseitzer/pytorch-fid). DCGAN에 대한 자세한 설명은 [Deep Convolutional Generative Adversarial Network (DCGAN)](https://ljm565.github.io/contents/DCGAN1.html)를 참고하시기 바랍니다.
+여기서는 DCGAN의 코드를 확인할 수 있으며, CelebA 데이터의 경우 DCGAN이 학습하면서 생성하는 순차적인 결과의 변화를 gif 형식의 파일로 가시화할 수 있습니다. 또한 학습된 모델이 생성한 데이터의 질을 확인하기 위하여 [Fréchet Inception Distance (FID) score](https://github.com/mseitzer/pytorch-fid)를 계산할 수 있습니다. DCGAN에 대한 자세한 설명은 [Deep Convolutional Generative Adversarial Network (DCGAN)](https://ljm565.github.io/contents/DCGAN1.html)를 참고하시기 바랍니다.
 <br><br><br>
 
 ## Supported Models
