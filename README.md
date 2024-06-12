@@ -33,7 +33,7 @@ This repository is structured as follows.
 │
 └── src      
     ├── models
-    |   └── dcgan.py                  <- DCGAN model file
+    |   └── dcgan.py                <- DCGAN model file
     |
     ├── run                   
     |   ├── cal_fid.py              <- Codes for calculating FID score

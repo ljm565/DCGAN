@@ -1,0 +1,75 @@
+# Deep Convolutional Generative Adversarial Network (DCGAN)
+
+## Introduction
+Deep Convolutional Generative Adversarial Network (DCGAN)는 생성 모델인 vanilla GAN의 문제점을 극복하고, CNN이 black-box라는 것에 실험으로써 반박한 알고리즘입니다.
+여기서는 DCGAN의 코드를 확인할 수 있으며, CelebA 데이터의 경우 DCGAN이 학습하면서 생성하는 순차적인 결과의 변화를 gif 형식의 파일로 가시화할 수 있습니다. 또한 학습된 모델이 생성한 데이터의 질을 확인하기 위하여 [Fréchet Inception Distance (FID) score](https://github.com/mseitzer/pytorch-fid)를 계산할 수 있습니다(출처: https://github.com/mseitzer/pytorch-fid). DCGAN에 대한 자세한 설명은 [Deep Convolutional Generative Adversarial Network (DCGAN)](https://ljm565.github.io/contents/DCGAN1.html)를 참고하시기 바랍니다.
+<br><br><br>
+
+## Supported Models
+### DCGAN
+Convolutional layer를 사용한 DCGAN 구현되어 있습니다.
+<br><br><br>
+
+## Base Dataset
+* 실험으로 사용하는 데이터는 [Ziwei Liu, Ping Luo, Xiaogang Wang, Xiaoou Tang Multimedia Laboratory의 CelebA](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) 데이터입니다. CelebA는 유명인들의 얼굴을 모아놓은 데이터입니다.
+* `config/config.yaml`에 학습 데이터의 경로를 설정하여 사용자가 가지고 있는 custom 데이터도 학습 가능합니다.
+다만 `src/utils/data_utils.py`에 custom dataloader 코드를 구현해야할 수도 있습니다.
+<br><br><br>
+
+## Quick Start
+```bash
+python3 src/run/train.py --config config/config.yaml --mode train
+```
+<br><br>
+
+## Project Tree
+본 레포지토리는 아래와 같은 구조로 구성됩니다.
+```
+├── configs                         <- Config 파일들을 저장하는 폴더
+│   └── *.yaml
+│
+└── src      
+    ├── models
+    |   └── dcgan.py                <- DCGAN 모델 파일
+    |
+    ├── run                   
+    |   ├── cal_fid.py              <- FID score 계산 실행 파일
+    |   ├── train.py                <- 학습 실행 파일
+    |   └── validation.py           <- 학습된 모델 평가 실행 파일
+    | 
+    ├── tools    
+    |   ├── pytorch_fid             <- FID score를 계산하기 위한 코드
+    |   |   ├── fid_score.py
+    |   |   └── inception.py
+    |   |
+    |   ├── model_manager.py          
+    |   └── training_logger.py      <- Training logger class 파일
+    |
+    ├── trainer                 
+    |   ├── build.py                <- Dataset, dataloader 등을 정의하는 파일
+    |   └── trainer.py              <- 학습, 평가, FID score 계산 class 파일
+    |
+    └── uitls                   
+        ├── __init__.py             <- Logger, 버전 등을 초기화 하는 파일
+        ├── data_utils.py           <- Custom dataloader 파일
+        ├── filesys_utils.py       
+        └── training_utils.py     
+```
+<br><br>
+
+## Tutorials & Documentations
+DCGAN 모델 학습을 위해서 다음 과정을 따라주시기 바랍니다.
+1. [Getting Started](./1_getting_started_ko.md)
+2. [Data Preparation](./2_data_preparation_ko.md)
+3. [Training](./3_trainig_ko.md)
+4. ETC
+   * [Evaluation](./4_model_evaluation_ko.md)
+   * [FID Calculation](./5_calculate_fid_ko.md)
+<br><br><br>
+
+
+## Training Results
+* DCGAN 결과<br><br>
+<img src="docs/figs/generation_gif_100epochs.gif" width="50%"><br><br>
+<img src="docs/figs/RealAndFake.png" width="100%"><br><br>
+<br><br><br>
