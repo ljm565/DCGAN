@@ -23,31 +23,37 @@ def build_dataset(config, modes):
     dataset_dict = {}
     if config.CelebA_train:
         # set to CelebA size
-        config.width, config.height = 64, 64
+        config.img_size = 64
 
         # init train, validation, test sets
         os.makedirs(config.CelebA.path, exist_ok=True)
+        data_path = os.path.join(config.CelebA.path, 'CelebA')
 
-        if not os.path.isdir(os.path.join(config.CelebA.path, 'CelebA')):
+        if not os.path.isdir(data_path):
             try:
                 LOGGER.info(colorstr('Downloading...'))
                 wget_path = os.path.join(config.CelebA.path, 'CelebA.zip')
-                unzip_path = os.path.join(config.CelebA.path, 'CelebA')
-                exec = 'wget -O ' + wget_path + ' https://s3-us-west-1.amazonaws.com/udacity-dlnfd/datasets/celeba.zip && unzip ' + wget_path + ' -d ' + unzip_path + ' && rm ' + wget_path
+                exec = 'wget -O ' + wget_path + ' https://s3-us-west-1.amazonaws.com/udacity-dlnfd/datasets/celeba.zip && unzip ' + wget_path + ' -d ' + data_path + ' && rm ' + wget_path
                 os.system(exec)
             except Exception as e:
                 LOGGER.info(colorstr('red', 'Downloading failed...'))
                 LOGGER.info(colorstr('red', 'Command not found. Please check mkdir, wget, unzip, rm command'))
-
-            celeba_valset_proportion = config.CelebA.CelebA_valset_proportion
-            trainset = dsets.MNIST(root=celeba_path, transform=transforms.ToTensor(), train=True, download=True)
-            valset_l = int(len(trainset) * celeba_valset_proportion)
-            trainset_l = len(trainset) - valset_l
-            trainset, valset = random_split(trainset, [trainset_l, valset_l])
-            testset = dsets.MNIST(root=celeba_path, transform=transforms.ToTensor(), train=False, download=True)
-            tmp_dsets = {'train': trainset, 'validation': valset, 'test': testset}
-            for mode in modes:
-                dataset_dict[mode] = tmp_dsets[mode]
+                raise e
+        
+        trans = transforms.Compose([transforms.Grayscale(num_output_channels=1),
+                                transforms.Resize(config.img_size),
+                                transforms.CenterCrop(config.img_size),
+                                transforms.ToTensor(),
+                                transforms.Normalize((0.5), (0.5))]) if config.convert2grayscale else \
+                transforms.Compose([transforms.Resize(config.img_size),
+                            transforms.CenterCrop(config.img_size),
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+        dataset = dsets.ImageFolder(root=data_path, transform=trans)
+        trainset, valset, testset = random_split(dataset, [len(dataset)-2000, 1000, 1000])
+        tmp_dsets = {'train': trainset, 'validation': valset, 'test': testset}
+        for mode in modes:
+            dataset_dict[mode] = tmp_dsets[mode]
     else:
         for mode in modes:
             dataset_dict[mode] = DLoader(config.CUSTOM.get(f'{mode}_data_path'))

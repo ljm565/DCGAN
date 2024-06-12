@@ -1,9 +1,5 @@
 .vscode/
-__pycache__/
-model/
-loss/
-data/
-result/
-test/
 .DS_Store
-CelebA/
+__pycache__/
+outputs/
+data/

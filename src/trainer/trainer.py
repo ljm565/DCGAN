@@ -47,6 +47,9 @@ class Trainer:
         self.convert2grayscale = True if self.config.color_channel==3 and self.config.convert2grayscale else False
         self.color_channel = 1 if self.convert2grayscale else self.config.color_channel
         self.config.color_channel = self.color_channel
+        if self.config.CelebA_train:
+            # set to CelebA size
+            self.config.img_size = 64
         
         # sanity check
         assert self.config.color_channel in [1, 3], colorstr('red', 'image channel must be 1 or 3, check your config..')
@@ -66,7 +69,7 @@ class Trainer:
         # init criterion, optimizer, etc.
         self.epochs = self.config.epochs
         self.noise_init_size = self.config.noise_init_size
-        self.fixed_test_noise = torch.randn(128, self.noise_init_size).to(self.device)
+        self.fixed_test_noise = torch.randn(128, self.noise_init_size, 1, 1).to(self.device)
         self.criterion = nn.BCELoss()
         if self.is_training_mode:
             self.g_optimizer = optim.Adam(self.generator.parameters(), lr=self.config.lr, betas=(self.config.beta1, 0.999))
@@ -186,14 +189,14 @@ class Trainer:
             # training discriminator for real data
             real_data = real_data.to(self.device)
             output_real = self.discriminator(real_data)
-            target = torch.ones(batch_size, 1).to(self.device)
+            target = torch.ones(batch_size).to(self.device)
             d_loss_real = self.criterion(output_real, target)
             d_x += output_real.mean()
 
             # training discriminator for fake data
-            fake_data = self.generator(torch.randn(batch_size, self.noise_init_size).to(self.device))
+            fake_data = self.generator(torch.randn(batch_size, self.noise_init_size, 1, 1).to(self.device))
             output_fake = self.discriminator(fake_data.detach())  # for ignoring backprop of the generator
-            target = torch.zeros(batch_size, 1).to(self.device)
+            target = torch.zeros(batch_size).to(self.device)
             d_loss_fake = self.criterion(output_fake, target)
             d_loss = d_loss_real + d_loss_fake
             d_g1 += output_fake.mean()
@@ -206,7 +209,7 @@ class Trainer:
             ########################################## Generator #########################################
             # training generator by interrupting discriminator
             output_fake = self.discriminator(fake_data)
-            target = torch.ones(batch_size, 1).to(self.device)
+            target = torch.ones(batch_size).to(self.device)
             g_loss = self.criterion(output_fake, target)
             d_g2 += output_fake.mean()
 
@@ -226,6 +229,8 @@ class Trainer:
                 loss_log = [d_loss.item(), g_loss.item(), d_x.item(), d_g1.item(), d_g2.item()]
                 msg = tuple([f'{epoch + 1}/{self.epochs}'] + loss_log)
                 pbar.set_description(('%15s' * 1 + '%15.4g' * len(loss_log)) % msg)
+
+                break
             
         # upadate logs
         if self.is_rank_zero:
@@ -257,14 +262,14 @@ class Trainer:
                     # training discriminator for real data
                     real_data = real_data.to(self.device)
                     output_real = self.discriminator(real_data)
-                    target = torch.ones(batch_size, 1).to(self.device)
+                    target = torch.ones(batch_size).to(self.device)
                     d_loss_real = self.criterion(output_real, target)
                     d_x += output_real.mean()
 
                     # training discriminator for fake data
-                    fake_data = self.generator(torch.randn(batch_size, self.noise_init_size).to(self.device))
+                    fake_data = self.generator(torch.randn(batch_size, self.noise_init_size, 1, 1).to(self.device))
                     output_fake = self.discriminator(fake_data.detach())  # for ignoring backprop of the generator
-                    target = torch.zeros(batch_size, 1).to(self.device)
+                    target = torch.zeros(batch_size).to(self.device)
                     d_loss_fake = self.criterion(output_fake, target)
                     d_loss = d_loss_real + d_loss_fake
                     d_g1 += output_fake.mean()
@@ -274,7 +279,7 @@ class Trainer:
                     ########################################## Generator #########################################
                     # training generator by interrupting discriminator
                     output_fake = self.discriminator(fake_data)
-                    target = torch.ones(batch_size, 1).to(self.device)
+                    target = torch.ones(batch_size).to(self.device)
                     g_loss = self.criterion(output_fake, target)
                     d_g2 += output_fake.mean()
                     ##############################################################################################
