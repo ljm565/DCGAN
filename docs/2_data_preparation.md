@@ -1,5 +1,5 @@
 # Data Preparation
-Here, we will proceed with a GAN model training tutorial using the [CelebA](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) dataset by default.
+Here, we will proceed with a DCGAN model training tutorial using the [CelebA](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) dataset by default.
 Please refer to the following instructions to utilize custom datasets.
 
 
